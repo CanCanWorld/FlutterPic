@@ -6,32 +6,40 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ItemPicWidget extends StatefulWidget {
-  const ItemPicWidget({Key? key, required this.path, required this.offset}) : super(key: key);
+  const ItemPicWidget({Key? key, required this.path}) : super(key: key);
   final String path;
-  final double offset;
 
   @override
   State<ItemPicWidget> createState() => _ItemPicWidgetState();
 }
 
-class _ItemPicWidgetState extends State<ItemPicWidget> {
+class _ItemPicWidgetState extends State<ItemPicWidget>
+    with SingleTickerProviderStateMixin {
   late BuildContext ctx;
   String progress = "";
   late FToast toast;
+  late AnimationController scaleAnimController;
+  late Animation<double> scale;
 
   @override
   void initState() {
     super.initState();
     toast = FToast();
     toast.init(context);
+    scaleAnimController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 400));
+    scale = Tween(begin: 0.6, end: 1.0).animate(scaleAnimController);
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
+    scaleAnimController.forward();
     return Scaffold(
-      body: Container(
+      body: ScaleTransition(
+        scale: scale,
+        child: Container(
           width: width,
           height: height,
           decoration: BoxDecoration(
@@ -54,31 +62,38 @@ class _ItemPicWidgetState extends State<ItemPicWidget> {
                 },
               );
             },
-          )),
+          ),
+        ),
+      ),
       endDrawer: Container(
         color: Colors.transparent,
         width: width,
         margin: EdgeInsets.fromLTRB(width / 3, height * 0.8, width / 3, 0),
-        child: TextButton(
-          onPressed: () {
-            downloadPic(widget.path);
-          },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-                const Color.fromARGB(30, 255, 255, 255)),
-            side: MaterialStateProperty.all(const BorderSide(
-              color: Colors.white,
-              width: 1,
-            )),
-          ),
-          child: Text(
-            "下载$progress",
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.white,
-              fontWeight: FontWeight.w100,
+        child: Column(
+          children: [
+            Text(""),
+            TextButton(
+              onPressed: () {
+                downloadPic(widget.path);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                    const Color.fromARGB(30, 255, 255, 255)),
+                side: MaterialStateProperty.all(const BorderSide(
+                  color: Colors.white,
+                  width: 1,
+                )),
+              ),
+              child: Text(
+                "下载$progress",
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w100,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

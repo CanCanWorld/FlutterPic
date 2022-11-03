@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterdemo/ItemPicWidget.dart';
-import 'package:flutterdemo/PicListAndPos.dart';
+import 'ItemPicWidget.dart';
+import 'PicListAndPos.dart';
 
 class PicPageWidget extends StatefulWidget {
   const PicPageWidget({Key? key}) : super(key: key);
@@ -13,7 +13,6 @@ class _PicPageWidgetState extends State<PicPageWidget> {
   List<Widget> list = [];
   late PicListAndPos? listAndPos;
   late PageController controller;
-  double offset = 0.0;
 
   @override
   void initState() {
@@ -22,15 +21,10 @@ class _PicPageWidgetState extends State<PicPageWidget> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     listAndPos = ModalRoute.of(context)?.settings.arguments as PicListAndPos?;
     setList();
     controller = PageController(initialPage: listAndPos!.position);
-    controller.addListener(() {
-      offset = controller.offset;
-      print('$offset');
-    });
   }
 
   @override
@@ -50,7 +44,7 @@ class _PicPageWidgetState extends State<PicPageWidget> {
     List<Widget> w = [];
     if (listAndPos != null) {
       for (var pic in listAndPos!.list) {
-        w.add(ItemPicWidget(path: pic.img.toString(), offset: offset,));
+        w.add(ItemPicWidget(path: pic.img.toString()));
       }
       setState(() {
         list = w;

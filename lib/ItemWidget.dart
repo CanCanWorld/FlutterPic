@@ -20,7 +20,6 @@ class _ItemWidgetState extends State<ItemWidget>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     scaleAnimController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 800));
